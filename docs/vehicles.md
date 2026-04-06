@@ -1,54 +1,56 @@
-# vehicles.py Documentation
+# vehicles.py
 
-## File Purpose
-Defines vehicle geometry, movement rules, emergency behavior, collision spacing, and vehicle drawing.
+## Purpose
+Defines vehicle entities, movement behavior, spacing logic, and vehicle rendering.
 
-## Functions And Classes In This File
-
+## Global Helper
 ### _new_id()
-- Generates unique vehicle IDs.
+Generates unique integer IDs for vehicle instances.
 
-### class Vehicle
+## Core Class
+### Vehicle
+Represents one moving unit (car or ambulance) in a single travel direction.
 
-#### __init__(direction, kind="car")
-- Initializes vehicle type, speed profile, dimensions, and spawn position.
+## Key Responsibilities
+- spawn at direction-specific road entry,
+- compute front/rear geometry helpers,
+- compute stop-line distance and leader gap,
+- update speed and position each frame,
+- render itself to the screen.
 
-#### _lane_center()
-- Returns lane center coordinate for current direction.
+## Important Methods
+### __init__(direction, kind="car")
+Initializes identity, type, speed profile, dimensions, and start position.
 
-#### _yield_side_sign()
-- Returns preferred lateral offset side for emergency yielding.
+### update(stop_for_signal, ahead, emergency_stop=False, nearby_same_dir=None)
+Main motion routine.
 
-#### front()
-- Leading-edge coordinate in travel direction.
+For regular cars:
+- stop-line braking when required,
+- follow leader speed/gap,
+- emergency yielding behavior.
 
-#### rear()
-- Trailing-edge coordinate in travel direction.
+For ambulance:
+- evaluate center/left/right offsets,
+- choose best forward-gap side path,
+- follow side-path leader safely,
+- apply overlap safety clamp.
 
-#### dist_to_stop_line()
-- Signed distance from vehicle front to stop line.
+### draw(surface)
+Renders body, roof, windshield, and lights.
+Ambulance adds stripe and lightbar styling.
 
-#### gap_to_ahead(ahead)
-- Bumper-to-bumper gap to leader vehicle.
+## Geometry Helpers
+- `_lane_center()`
+- `_yield_side_sign()`
+- `front()`
+- `rear()`
+- `dist_to_stop_line()`
+- `gap_to_ahead(ahead)`
+- `is_off_screen()`
 
-#### is_off_screen()
-- Checks whether vehicle has fully exited view.
-
-#### update(stop_for_signal, ahead, emergency_stop=False, nearby_same_dir=None)
-- Main motion update:
-  - signal braking
-  - car-following speed adaptation
-  - emergency yielding behavior
-  - ambulance side-path selection (left/center/right)
-  - anti-overlap clamp
-  - smooth speed and lateral interpolation
-
-#### draw(surface)
-- Draws vehicle body details.
-- Ambulance receives special styling (stripe and lightbar).
-
-## Computer Graphics Algorithms Used In This File
-- Kinematic update with constrained acceleration/deceleration.
-- Gap-based car-following heuristic.
-- Lateral interpolation for smooth side shifts.
-- 2D procedural vehicle rendering via raster primitives (`rect`, `circle`).
+## Techniques Used
+- Kinematic speed interpolation with acceleration/deceleration limits.
+- Gap-based following for collision avoidance.
+- Lateral offset interpolation for smooth side movement.
+- Primitive-shape raster rendering for vehicle visuals.

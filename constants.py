@@ -14,8 +14,6 @@ WEST  = 1   # moving left   (−x)
 SOUTH = 2   # moving down   (+y)
 NORTH = 3   # moving up     (−y)
 
-DIR_NAMES = {EAST: "EAST", WEST: "WEST", SOUTH: "SOUTH", NORTH: "NORTH"}
-
 # ── Colour palette ────────────────────────────────────────────────────────────
 WHITE        = (255, 255, 255)
 BLACK        = (10,  10,  10)
@@ -75,26 +73,6 @@ DECEL_RATE     = 0.22   # deceleration (px/frame)
 # ── Traffic signals ───────────────────────────────────────────────────────────
 GREEN_DURATION  = 7.0   # seconds per green phase
 YELLOW_DURATION = 2.0   # seconds per yellow phase
-
-# Phase name constants
-NS_GREEN  = "NS_GREEN"
-NS_YELLOW = "NS_YELLOW"
-EW_GREEN  = "EW_GREEN"
-EW_YELLOW = "EW_YELLOW"
-
-# Human-readable phase labels for the UI
-PHASE_LABELS = {
-    NS_GREEN:  "N/S  GREEN ",
-    NS_YELLOW: "N/S  YELLOW",
-    EW_GREEN:  "E/W  GREEN ",
-    EW_YELLOW: "E/W  YELLOW",
-}
-PHASE_COLORS = {
-    NS_GREEN:  LIGHT_GREEN,
-    NS_YELLOW: LIGHT_YELLOW,
-    EW_GREEN:  LIGHT_GREEN,
-    EW_YELLOW: LIGHT_YELLOW,
-}
 
 # ── Spawning ──────────────────────────────────────────────────────────────────
 BASE_SPAWN_INTERVAL = 2.2    # simulation-seconds between spawn attempts

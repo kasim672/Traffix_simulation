@@ -1,14 +1,22 @@
-# requirements.txt Documentation
+# requirements.txt
 
-## File Purpose
-Declares runtime Python dependency versions for the project.
+## Purpose
+Lists Python package dependencies required to run the project.
 
-## Entries
+## Current Dependency
 - `pygame>=2.0.0`
 
-## Functions In This File
-- No functions.
+## Why It Is Needed
+Pygame provides:
+- window and display management,
+- input event handling,
+- timing utilities,
+- 2D drawing primitives,
+- font rendering.
 
-## Computer Graphics Algorithms Used In This File
-- No algorithms are implemented here.
-- This dependency enables the rendering and event-loop infrastructure used by the graphics code.
+## Installation
+From the project root:
+
+```bash
+pip install -r requirements.txt
+```

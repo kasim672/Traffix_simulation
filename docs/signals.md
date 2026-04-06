@@ -1,42 +1,47 @@
-# signals.py Documentation
+# signals.py
 
-## File Purpose
-Implements the traffic signal controller and draws signal posts/lights.
+## Purpose
+Defines the traffic signal controller and signal rendering.
 
-## Classes And Functions In This File
+This module is responsible for both signal state transitions and drawing the signal posts/lights on screen.
 
-### class TrafficSignal
-State machine for signal timing and manual overrides.
+## Core Class
+### TrafficSignal
+A finite state machine that keeps one active approach at a time.
 
-#### __init__()
-- Initializes active direction, pending direction, phase, timer, and mode.
+## State Model
+- `active_direction`: currently green direction.
+- `pending_direction`: next direction to become green.
+- `phase`: either `GREEN` or `YELLOW_BEFORE_GREEN`.
+- `timer`: elapsed time in current phase.
+- `auto_cycle`: whether automatic cycling is enabled.
 
-#### update(dt)
-- Advances signal timer.
-- Applies phase transitions (green and yellow-before-green behavior).
+## Key Methods
+### update(dt)
+Advances signal timing and performs phase transitions.
 
-#### should_stop(direction)
-- Returns whether a vehicle in `direction` must stop.
+### should_stop(direction)
+Returns whether a vehicle in that direction should stop.
 
-#### set_green(direction)
-- Manual override to request a direction change.
+### set_green(direction)
+Manual request for next green direction.
 
-#### set_auto_cycle(enabled)
-- Enables or disables auto cycling.
+### set_auto_cycle(enabled)
+Enables or disables automatic cycling.
 
-#### time_remaining()
-- Returns remaining time for current signal phase.
+### time_remaining()
+Returns remaining phase time for UI display.
 
-#### progress()
-- Returns normalized phase progress for UI bars.
+### progress()
+Returns normalized phase progress for progress bar rendering.
 
-#### _draw_signal_box(surface, cx, cy, active_color)
-- Draws one 3-bulb signal housing with active lamp and glow.
+### _draw_signal_box(surface, cx, cy, active_color)
+Draws one traffic-light housing with 3 lamps.
 
-#### draw(surface)
-- Draws all approach signal posts around the intersection.
+### draw(surface)
+Draws the four signal posts around intersection approaches.
 
-## Computer Graphics Algorithms Used In This File
-- Finite State Machine (FSM) for signal phase transitions.
-- 2D raster primitive rendering (`rect`, `circle`) for signal hardware.
-- Painter-style layering inside each signal element (housing, lamps, glow).
+## Techniques Used
+- Finite state machine for transition logic.
+- Primitive raster rendering with Pygame shapes.
+- Per-lamp glow layering for active light feedback.

@@ -1,60 +1,46 @@
-# simulation.py Documentation
+# simulation.py
 
-## File Purpose
-Owns top-level simulation state, updates traffic each frame, handles spawning, and computes per-vehicle neighbor relationships.
+## Purpose
+Top-level simulation manager.
 
-## Classes And Functions In This File
+This module owns runtime state and performs per-frame world updates.
 
-### class Simulation
+## Core Class
+### Simulation
+Responsibilities:
+- store all active vehicles,
+- own one `TrafficSignal` instance,
+- process pause/speed/emergency control state,
+- spawn new traffic,
+- update all entities,
+- track metrics (elapsed time, passed vehicles).
 
-#### __init__()
-- Creates vehicle list, signal object, control states, spawn timers, and metrics.
+## Public Control Methods
+- `toggle_pause()`
+- `increase_speed()`
+- `decrease_speed()`
+- `trigger_ambulance()`
+- `set_signal_green(direction)`
+- `set_signal_auto(enabled)`
 
-#### toggle_pause()
-- Toggles paused state.
+## Main Update Pipeline
+`update(dt)` performs:
+1. convert wall time to simulation time using speed multiplier,
+2. update signal state,
+3. attempt spawning on all approaches (when allowed),
+4. build nearest-leader map,
+5. update each vehicle,
+6. remove off-screen vehicles and update counters,
+7. clear emergency state when ambulance exits.
 
-#### increase_speed()
-- Increases simulation speed multiplier within configured bounds.
+## Internal Helpers
+- `_try_spawn(direction)`: spawn guard wrapper.
+- `_can_spawn_direction(direction, margin_mult)`: spawn-space check.
+- `_near_spawn_edge(vehicle, direction, margin_mult)`: proximity helper.
+- `_build_ahead_map()`: direction-wise sorting and nearest-leader mapping.
+- `_choose_ambulance_direction()`: selects a clear approach for ambulance entry.
 
-#### decrease_speed()
-- Decreases simulation speed multiplier within configured bounds.
-
-#### trigger_ambulance()
-- Starts emergency mode and spawns an ambulance when possible.
-
-#### _choose_ambulance_direction()
-- Picks a clear entry direction with low traffic count.
-
-#### set_signal_green(direction)
-- Forwards manual signal request to `TrafficSignal`.
-
-#### set_signal_auto(enabled)
-- Forwards auto/manual mode request to `TrafficSignal`.
-
-#### update(dt)
-- Main per-frame simulation update:
-  - updates signal state
-  - spawns traffic (unless emergency mode)
-  - builds ahead map
-  - updates all vehicles
-  - removes off-screen vehicles
-  - clears emergency mode when ambulance exits
-
-#### _try_spawn(direction)
-- Attempts vehicle spawn if edge is clear.
-
-#### _can_spawn_direction(direction, margin_mult)
-- Checks whether spawn edge has enough free space.
-
-#### _near_spawn_edge(v, direction, margin_mult)
-- Helper for spawn occupancy checks.
-
-#### _build_ahead_map()
-- Builds nearest-leading-vehicle map for each lane/direction.
-
-#### vehicle_counts_by_direction()
-- Returns active vehicle counts by direction for HUD.
-
-## Computer Graphics Algorithms Used In This File
-- Core simulation algorithm, not direct rendering.
-- Uses direction-wise sorting and nearest-leader lookup (lane-order heuristic) to support believable movement.
+## Techniques Used
+- Deterministic per-frame update ordering.
+- Direction-group sorting for lane leadership lookup.
+- Spawn blocking near entry edges to avoid overlap at creation.

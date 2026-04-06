@@ -8,11 +8,10 @@ from constants import (
     ROAD_CENTER_X, ROAD_CENTER_Y, ROAD_HALF_W,
     INTER_LEFT, INTER_RIGHT, INTER_TOP, INTER_BOTTOM, INTER_W, INTER_H,
     EASTBOUND_Y, WESTBOUND_Y, SOUTHBOUND_X, NORTHBOUND_X,
-    EAST, WEST, NORTH, SOUTH, DIR_NAMES,
+    EAST, WEST, NORTH, SOUTH,
     GRASS, ROAD_DARK, ROAD_MID,
     LANE_MARK, STOP_LINE, SIDEWALK, CURB,
     UI_PANEL, UI_BORDER, UI_LABEL, UI_VALUE, UI_TITLE_C, UI_WARN,
-    WHITE, BLACK,
     LIGHT_RED, LIGHT_YELLOW, LIGHT_GREEN,
 )
 from simulation import Simulation
@@ -42,7 +41,6 @@ class Renderer:
         mono_candidates = ["Consolas", "Courier New", "DejaVu Sans Mono", None]
         self.font_sm  = pygame.font.SysFont(mono_candidates, 13)
         self.font_med = pygame.font.SysFont(mono_candidates, 17, bold=True)
-        self.font_lg  = pygame.font.SysFont(mono_candidates, 30, bold=True)
         self.font_xl  = pygame.font.SysFont(mono_candidates, 44, bold=True)
 
     # =========================================================================
@@ -264,14 +262,12 @@ class Renderer:
                          (px + 8, py + 32), (px + panel_w - 8, py + 32), 1)
 
         # ── Signal status ─────────────────────────────────────────────────────
-        active_name = DIR_NAMES.get(sim.signal.active_direction, "?")
-        pending_name = DIR_NAMES.get(sim.signal.pending_direction, "?")
         mode_name = "AUTO" if sim.signal.auto_cycle else "MANUAL"
         if sim.signal.phase == "YELLOW_BEFORE_GREEN":
-            state_label = f"{pending_name} YELLOW ({mode_name})"
+            state_label = f"YELLOW ({mode_name})"
             state_color = LIGHT_YELLOW
         else:
-            state_label = f"{active_name} GREEN ({mode_name})"
+            state_label = f"GREEN ({mode_name})"
             state_color = LIGHT_GREEN
         s_lbl = self.font_sm.render("SIGNAL:", True, UI_LABEL)
         s_val = self.font_sm.render(state_label, True, state_color)
@@ -301,7 +297,6 @@ class Renderer:
                          (px + 8, py + 85), (px + panel_w - 8, py + 85), 1)
 
         # ── Counts ────────────────────────────────────────────────────────────
-        counts = sim.vehicle_counts_by_direction()
         rows = [
             ("VEHICLES ACTIVE", str(len(sim.vehicles))),
             ("VEHICLES PASSED", str(sim.vehicles_passed)),
@@ -315,20 +310,6 @@ class Renderer:
             self.screen.blit(l_surf, (px + 10, y_off))
             self.screen.blit(v_surf, (px + panel_w - 10 - v_surf.get_width(), y_off))
             y_off += 18
-
-        # ── Per-direction breakdown ───────────────────────────────────────────
-        pygame.draw.line(self.screen, (*UI_BORDER, 80),
-                         (px + 8, y_off + 2), (px + panel_w - 8, y_off + 2), 1)
-        y_off += 8
-        dir_info = [(EAST, "→ EAST"), (WEST, "← WEST"),
-                    (SOUTH, "↓ SOUTH"), (NORTH, "↑ NORTH")]
-        for i, (d, label) in enumerate(dir_info):
-            lx = px + 10 + (i % 2) * 118
-            ly = y_off + (i // 2) * 16
-            d_surf = self.font_sm.render(f"{label}: {counts[d]}", True, UI_LABEL)
-            self.screen.blit(d_surf, (lx, ly))
-
-        y_off += 36
 
         # ── Speed control ─────────────────────────────────────────────────────
         pygame.draw.line(self.screen, (*UI_BORDER, 80),

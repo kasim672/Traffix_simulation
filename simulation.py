@@ -74,9 +74,9 @@ class Simulation:
         self.emergency_active = True
 
     def _choose_ambulance_direction(self) -> Optional[int]:
-        """Pick a clear approach with the fewest vehicles; return None if all spawns are blocked."""
-        counts = self.vehicle_counts_by_direction()
-        candidates = sorted((EAST, WEST, NORTH, SOUTH), key=lambda direction: counts[direction])
+        """Pick a clear approach; return None if all spawns are blocked."""
+        candidates = [EAST, WEST, NORTH, SOUTH]
+        random.shuffle(candidates)
         for direction in candidates:
             if self._can_spawn_direction(direction, margin_mult=3.0):
                 return direction
@@ -192,22 +192,19 @@ class Simulation:
         for v in self.vehicles:
             by_dir[v.direction].append(v)
 
+        sort_rules = {
+            EAST: (lambda v: v.x, True),
+            WEST: (lambda v: v.x, False),
+            SOUTH: (lambda v: v.y, True),
+            NORTH: (lambda v: v.y, False),
+        }
+
         ahead_map: dict[int, Optional[Vehicle]] = {}
 
         for direction, group in by_dir.items():
             # Sort so the most-advanced vehicle is first (index 0)
-            if direction == EAST:
-                # Most advanced = largest x
-                s = sorted(group, key=lambda v: v.x, reverse=True)
-            elif direction == WEST:
-                # Most advanced = smallest x
-                s = sorted(group, key=lambda v: v.x)
-            elif direction == SOUTH:
-                # Most advanced = largest y
-                s = sorted(group, key=lambda v: v.y, reverse=True)
-            else:  # NORTH
-                # Most advanced = smallest y
-                s = sorted(group, key=lambda v: v.y)
+            key_fn, rev = sort_rules[direction]
+            s = sorted(group, key=key_fn, reverse=rev)
 
             for i, v in enumerate(s):
                 # The vehicle at index (i−1) is directly ahead; none for index 0
@@ -215,13 +212,3 @@ class Simulation:
 
         return ahead_map
 
-    # =========================================================================
-    #  Utility
-    # =========================================================================
-
-    def vehicle_counts_by_direction(self) -> dict[int, int]:
-        """Return a count of active vehicles per direction (for the UI)."""
-        counts = {EAST: 0, WEST: 0, NORTH: 0, SOUTH: 0}
-        for v in self.vehicles:
-            counts[v.direction] += 1
-        return counts

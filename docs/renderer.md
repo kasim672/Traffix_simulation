@@ -1,50 +1,61 @@
-# renderer.py Documentation
+# renderer.py
 
-## File Purpose
-Handles all visual rendering: environment, road markings, signals, vehicles, and HUD.
+## Purpose
+Handles all frame rendering for the simulation.
 
-## Classes And Functions In This File
+This module draws the world, dynamic entities, and UI overlays.
 
-### class Renderer
+## Core Class
+### Renderer
 
-#### __init__(screen)
-- Stores target surface, loads fonts, and prebuilds static road surface.
+## Render Pipeline
+`draw_frame(sim, fps)` draws in this order:
+1. prebuilt static road surface,
+2. traffic signals,
+3. vehicles,
+4. HUD panels,
+5. pause overlay.
 
-#### _load_fonts()
-- Initializes font resources for HUD and overlays.
+This layering keeps visuals stable and readable.
 
-#### _build_road_surface()
-- Pre-renders static scene layers:
-  - grass texture
-  - sidewalks/curbs
-  - roads/intersection
-  - lane dashes
-  - stop lines
-  - zebra crossings
-  - edge lines
-  - direction arrows
+## Main Methods
+### __init__(screen)
+Stores output surface, loads fonts, and caches static road artwork.
 
-#### _draw_arrows(surf)
-- Places directional arrow hints on road arms.
+### _load_fonts()
+Initializes HUD and overlay font objects.
 
-#### _draw_single_arrow(surf, cx, cy, direction, color, size=10)
-- Draws one filled directional arrow polygon.
+### _build_road_surface()
+Pre-renders static scene elements once:
+- grass texture,
+- sidewalks and curbs,
+- road strips and intersection,
+- lane marks,
+- stop lines,
+- zebra crossings,
+- edge lines,
+- direction arrows.
 
-#### draw_frame(sim, fps)
-- Main frame render order:
-  - static road
-  - signal posts
-  - vehicles
-  - HUD
-  - pause overlay (if paused)
+### _draw_arrows(surf)
+Places directional hints on each road arm.
 
-#### _draw_hud(sim, fps)
-- Draws simulation information panel, progress bars, metrics, direction counts, and controls list.
+### _draw_single_arrow(...)
+Draws one polygon arrow primitive.
 
-#### _draw_pause_overlay()
-- Draws translucent pause screen overlay and text.
+### _draw_hud(sim, fps)
+Draws left information panel:
+- signal color/mode status,
+- phase progress bar and timer,
+- active/passed/time/fps metrics,
+- speed multiplier and speed bar.
 
-## Computer Graphics Algorithms Used In This File
-- Painter's algorithm (draw order layering).
-- Procedural raster geometry using primitive shapes and lines.
-- Surface caching optimization (pre-render static road to avoid per-frame recomputation).
+### _draw_controls_panel(sim)
+Draws right controls/help panel and ambulance status.
+
+### _draw_pause_overlay()
+Draws translucent pause screen overlay and labels.
+
+## Techniques Used
+- Painter-style draw ordering.
+- Procedural 2D raster drawing with Pygame primitives.
+- Static surface caching for performance.

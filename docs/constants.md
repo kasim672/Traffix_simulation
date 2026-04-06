@@ -1,21 +1,29 @@
-# constants.py Documentation
+# constants.py
 
-## File Purpose
-Central configuration module containing simulation constants for window setup, colors, road geometry, physics, signal timing, and spawn/speed control.
+## Purpose
+Central configuration source for the entire project.
 
-## Functions In This File
-- No functions.
-- This file defines constants only.
+All modules import values from this file so geometry, timing, and behavior stay consistent.
 
-## Key Symbol Groups
-- Window and title settings
-- Direction identifiers and names
-- Color palette
-- Road and lane geometry
-- Vehicle motion constants
-- Signal timing constants
-- Spawn and speed multiplier constants
+## What It Defines
+- Window settings: width, height, title, FPS.
+- Direction identifiers: EAST, WEST, SOUTH, NORTH.
+- Color palette: world, UI, traffic lights, ambulance colors.
+- Road/intersection geometry and lane center coordinates.
+- Vehicle physics parameters:
+	- base speed,
+	- braking distance,
+	- minimum gap,
+	- acceleration and deceleration rates.
+- Signal timing values:
+	- green duration,
+	- yellow duration.
+- Spawning and speed-control settings:
+	- spawn interval/probability,
+	- min/max speed multiplier,
+	- speed step.
 
-## Computer Graphics Algorithms Used In This File
-- No algorithm implementation.
-- Provides parameters used by rendering and simulation algorithms in other files.
+## Design Notes
+- No functions or classes are implemented here.
+- This module is configuration-only.
+- Changing values here affects behavior globally without changing program flow.

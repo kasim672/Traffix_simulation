@@ -264,9 +264,14 @@ class Renderer:
 
         # ── Signal status ─────────────────────────────────────────────────────
         active_name = DIR_NAMES.get(sim.signal.active_direction, "?")
+        pending_name = DIR_NAMES.get(sim.signal.pending_direction, "?")
         mode_name = "AUTO" if sim.signal.auto_cycle else "MANUAL"
-        state_label = f"{active_name} GREEN ({mode_name})"
-        state_color = LIGHT_GREEN
+        if sim.signal.phase == "YELLOW_BEFORE_GREEN":
+            state_label = f"{pending_name} YELLOW ({mode_name})"
+            state_color = LIGHT_YELLOW
+        else:
+            state_label = f"{active_name} GREEN ({mode_name})"
+            state_color = LIGHT_GREEN
         s_lbl = self.font_sm.render("SIGNAL:", True, UI_LABEL)
         s_val = self.font_sm.render(state_label, True, state_color)
         self.screen.blit(s_lbl, (px + 10, py + 40))

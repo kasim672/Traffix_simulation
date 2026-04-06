@@ -74,7 +74,7 @@ DECEL_RATE     = 0.22   # deceleration (px/frame)
 
 # ── Traffic signals ───────────────────────────────────────────────────────────
 GREEN_DURATION  = 7.0   # seconds per green phase
-YELLOW_DURATION = 2.5   # seconds per yellow phase
+YELLOW_DURATION = 2.0   # seconds per yellow phase
 
 # Phase name constants
 NS_GREEN  = "NS_GREEN"

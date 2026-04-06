@@ -1,5 +1,7 @@
 # Real-Time Traffic Simulation
-
+<p align="center">
+ <img height=350px src="./image.png" alt="Simulation output">
+</p>
 ## Overview
 This project is a real-time 2D traffic intersection simulator built with Python and Pygame.
 

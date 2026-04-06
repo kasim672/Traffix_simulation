@@ -233,6 +233,7 @@ class Renderer:
 
         # 4. HUD
         self._draw_hud(sim, fps)
+        self._draw_controls_panel(sim)
 
         # 5. Pause overlay (drawn last so it covers everything)
         if sim.paused:
@@ -244,7 +245,7 @@ class Renderer:
 
     def _draw_hud(self, sim: Simulation, fps: float):
         """Render the semi-transparent info panel in the top-left corner."""
-        panel_w, panel_h = 255, 290
+        panel_w, panel_h = 255, 248
         px, py = 12, 12
 
         # ── Panel background ──────────────────────────────────────────────────
@@ -315,11 +316,6 @@ class Renderer:
             self.screen.blit(v_surf, (px + panel_w - 10 - v_surf.get_width(), y_off))
             y_off += 18
 
-        emergency_label = "AMBULANCE: ACTIVE" if sim.emergency_active else "AMBULANCE: READY"
-        emergency_color = UI_WARN if sim.emergency_active else UI_LABEL
-        e_surf = self.font_sm.render(emergency_label, True, emergency_color)
-        self.screen.blit(e_surf, (px + 10, y_off - 1))
-
         # ── Per-direction breakdown ───────────────────────────────────────────
         pygame.draw.line(self.screen, (*UI_BORDER, 80),
                          (px + 8, y_off + 2), (px + panel_w - 8, y_off + 2), 1)
@@ -357,10 +353,23 @@ class Renderer:
 
         y_off += 30
 
-        # ── Key-bindings ──────────────────────────────────────────────────────
-        pygame.draw.line(self.screen, (*UI_BORDER, 80),
-                         (px + 8, y_off), (px + panel_w - 8, y_off), 1)
-        y_off += 5
+    def _draw_controls_panel(self, sim: Simulation):
+        """Render controls in a separate panel on the top-right."""
+        panel_w, panel_h = 275, 145
+        px = SCREEN_WIDTH - panel_w - 12
+        py = 12
+
+        panel = pygame.Surface((panel_w, panel_h), pygame.SRCALPHA)
+        panel.fill((*UI_PANEL, 205))
+        pygame.draw.rect(panel, (*UI_BORDER, 200),
+                         (0, 0, panel_w, panel_h), 1, border_radius=8)
+        self.screen.blit(panel, (px, py))
+
+        title = self.font_sm.render("CONTROLS", True, UI_TITLE_C)
+        self.screen.blit(title, (px + 10, py + 8))
+        pygame.draw.line(self.screen, (*UI_BORDER, 100),
+                         (px + 8, py + 26), (px + panel_w - 8, py + 26), 1)
+
         hints = [
             "[N]/[E]/[S]/[W] Set GREEN",
             "[R] Auto cycle   [A] Ambulance",
@@ -368,10 +377,19 @@ class Renderer:
             "[+] Speed up   [-] Slow down",
             "[ESC] Quit",
         ]
+        y = py + 34
         for hint in hints:
-            h_surf = self.font_sm.render(hint, True, (105, 115, 135))
-            self.screen.blit(h_surf, (px + 10, y_off))
-            y_off += 15
+            h_surf = self.font_sm.render(hint, True, UI_LABEL)
+            self.screen.blit(h_surf, (px + 10, y))
+            y += 16
+
+        pygame.draw.line(self.screen, (*UI_BORDER, 100),
+                         (px + 8, y + 1), (px + panel_w - 8, y + 1), 1)
+        y += 8
+        emergency_label = "AMBULANCE: ACTIVE" if sim.emergency_active else "AMBULANCE: READY"
+        emergency_color = UI_WARN if sim.emergency_active else UI_VALUE
+        e_surf = self.font_sm.render(emergency_label, True, emergency_color)
+        self.screen.blit(e_surf, (px + panel_w - 10 - e_surf.get_width(), y))
 
     def _draw_pause_overlay(self):
         """Translucent black overlay with centred PAUSED text."""

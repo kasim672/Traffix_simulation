@@ -80,13 +80,13 @@ def main():
 
                 # Manual signal controls (one direction green)
                 elif key == pygame.K_n:
-                    sim.set_signal_green(NORTH)
-                elif key == pygame.K_e:
-                    sim.set_signal_green(EAST)
-                elif key == pygame.K_s:
                     sim.set_signal_green(SOUTH)
-                elif key == pygame.K_w:
+                elif key == pygame.K_e:
                     sim.set_signal_green(WEST)
+                elif key == pygame.K_s:
+                    sim.set_signal_green(NORTH)
+                elif key == pygame.K_w:
+                    sim.set_signal_green(EAST)
                 elif key == pygame.K_r:
                     sim.set_signal_auto(True)
 

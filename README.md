@@ -28,10 +28,15 @@ The codebase is intentionally modular so each concern is isolated:
 - Speed multiplier controls and pause support.
 - HUD for status, timer, counts, and speed.
 
-## Preview and Demo
-You can watch a recorded project preview in:
 
-- [PROJECTPREVIEWGIF.gif](PROJECTPREVIEWGIF.gif)
+## Preview and Demo
+
+The video below shows the final output of the simulation.
+You can watch a recorded project preview in:
+<p align="center">
+    <img src="./PROJECTPREVIEWGIF.gif">
+</p>
+
 
 This demo shows the live intersection simulation, signal transitions, vehicle flow behavior, HUD updates, and emergency ambulance handling.
 

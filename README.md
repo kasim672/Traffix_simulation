@@ -31,7 +31,7 @@ The codebase is intentionally modular so each concern is isolated:
 ## Preview and Demo
 You can watch a recorded project preview in:
 
-- [PROJECTPREVIEWGIF.mp4](PROJECTPREVIEWGIF.mp4)
+- [PROJECTPREVIEWGIF.gif](PROJECTPREVIEWGIF.mp4)
 
 This demo shows the live intersection simulation, signal transitions, vehicle flow behavior, HUD updates, and emergency ambulance handling.
 
